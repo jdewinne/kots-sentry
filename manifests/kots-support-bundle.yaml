@@ -13,12 +13,15 @@ spec:
         name: sentry/logs
         selector:
           - component=sentry
-    - run:
-        collectorName: ping-google
-        image: flungo/netutils
-        command: ["ping"]
-        args: ["www.google.com"]
-        timeout: 5s
+    - runPod:
+        name: "ping-google"
+        namespace: '{{repl Namespace}}'
+        podSpec: 
+          containers:
+          - name: run-ping
+            image: busybox:1
+            command: ["ping"]
+            args: ["-w", "5", "www.google.com"]
     - http:
         collectorName: echo-ip
         get:
